@@ -36,16 +36,6 @@ const ProfilePage=()=>{
         console.log(nameRef.current.value)
         console.log(photoRef.current.value)
 
-        console.log(
-            {
-                idToken:idToken,
-            displayName:nameRef.current.value,
-            photoUrl:photoRef.current.value,
-            deleteAttribute:[],
-            returnSecureToken:true
-            }
-        )
-
         const response= await fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyBgisiq-vo6ATIrzPaLyCe3j876p8HEzVs',{
       method:'POST',
       body:JSON.stringify({
