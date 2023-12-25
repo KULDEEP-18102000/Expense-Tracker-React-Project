@@ -101,7 +101,7 @@ const history=useHistory()
       console.log(res.idToken)
       localStorage.setItem('token',res.idToken)
       // ctx.loginHandler(res.idToken)
-      history.push('/welcome')
+      history.push('/')
       console.log("successfully signed in")
     }
     } 

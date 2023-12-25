@@ -3,8 +3,11 @@ import './App.css';
 import AuthForm from './components/Auth/AuthForm';
 import WelcomePage from './pages/Welcome';
 import ProfilePage from './pages/Profile';
+import NavBar from './components/NavBar';
 import { Route,Redirect } from 'react-router-dom';
 // import { Fragment } from 'react';
+
+const token=localStorage.getItem('token')
 
 function App() {
   return (
@@ -12,13 +15,16 @@ function App() {
     //   <AuthForm/>
     // </div>
     <>
+    <NavBar></NavBar>
     
-    <Route exact path="/">
+    <Route exact path="/auth">
       <AuthForm/>
     </Route>
       
-      <Route exact path='/welcome'>
-        <WelcomePage/>
+      <Route exact path='/'>
+        {token && <WelcomePage/>}
+        {!token && <Redirect to='/auth'/>}
+        {/* <WelcomePage/> */}
       </Route>
 
       <Route exact path='/profile'>
