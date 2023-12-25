@@ -1,5 +1,5 @@
 import { useState, useRef,useContext } from 'react';
-
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import classes from './AuthForm.module.css';
 
 
@@ -7,6 +7,7 @@ import classes from './AuthForm.module.css';
 const AuthForm = () => {
 
 //   const ctx=useContext(CartContext)
+const history=useHistory()
 
   
   const [user,setUser]=useState({
@@ -16,12 +17,19 @@ const AuthForm = () => {
     confirmPassword:""
   })
 
+  const [isLogin,setIsLogin]=useState(false)
+
   const [loading,setLoading]=useState(false)
+
+  const switchAuthModeHandler=()=>{
+    setIsLogin(!isLogin)
+  }
 
 
   const addUser=async(e)=>{
 
-    if(user.password!=user.confirmPassword){
+    if(isLogin==false){
+      if(user.password!=user.confirmPassword){
         alert('Password and Confirm Password are not same')
     }else{
 
@@ -62,8 +70,41 @@ const AuthForm = () => {
     setLoading(false)
     setUser({email:"",password:"",returnSecureToken:true})
     }
+    }   
+    else{
 
-    
+      setLoading(true)
+      e.preventDefault()
+      const response= await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBgisiq-vo6ATIrzPaLyCe3j876p8HEzVs',{
+      method:'POST',
+      body:JSON.stringify(user),
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+
+    if(!response.ok){
+      const res=await response.json()
+      setLoading(false)
+
+      console.log(res)
+      let errorMessage="Something Went Wrong"
+      if(res && res.error && res.error.message){
+        errorMessage=res.error.message
+      }
+      alert(errorMessage);
+    }
+    else{
+      const res=await response.json()
+      setLoading(false)
+
+      console.log(res.idToken)
+      localStorage.setItem('token',res.idToken)
+      // ctx.loginHandler(res.idToken)
+      history.push('/welcome')
+      console.log("successfully signed in")
+    }
+    } 
   }
 
   const onChangeHandler=(e)=>{
@@ -73,7 +114,7 @@ const AuthForm = () => {
 
   return (
     <section className={classes.auth}>
-      <h1>Sign Up</h1>
+      <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
       <form onSubmit={addUser}>
         <div className={classes.control}>
           <label htmlFor='email'>Your Email</label>
@@ -91,21 +132,24 @@ const AuthForm = () => {
           />
         </div>
 
+        {!isLogin && 
         <div className={classes.control}>
-          <label htmlFor='confirmPassword'>Confirm Password</label>
-          <input
-            type='password'
-            id='confirmPassword'
-            name='confirmPassword'
-            value={user.confirmPassword}
-            onChange={onChangeHandler}
-            required
-          />
-        </div>
+        <label htmlFor='confirmPassword'>Confirm Password</label>
+        <input
+          type='password'
+          id='confirmPassword'
+          name='confirmPassword'
+          value={user.confirmPassword}
+          onChange={onChangeHandler}
+          required
+        />
+      </div>
+        }
+        
         <div className={classes.actions}>
-          
+          <button type='button'className={classes.toggle} onClick={switchAuthModeHandler}>{isLogin?'Create New Account':'Login with existing account'}</button>
             
-          {loading===true?<p style={{color:'white'}}>Sending Request...</p>:<button style={{margin:'2px'}}>Sign Up</button>}
+          {loading===true?<p style={{color:'white'}}>Sending Request...</p>:<button style={{margin:'2px'}}>{isLogin?'Login':'Sign Up'}</button>}
           
         </div>
       </form>
