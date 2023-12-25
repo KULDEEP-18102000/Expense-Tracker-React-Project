@@ -23,10 +23,13 @@ const ProfilePage=()=>{
         'Content-Type':'application/json'
       }
     })
-    const res=await response.json()
-    console.log(res.users[0])
-    setProfileName(res.users[0].displayName)
-    setProfileImage(res.users[0].photoUrl)
+    if(response.ok){
+        const res=await response.json()
+    console.log(res?.users[0])
+    setProfileName(res?.users[0].displayName)
+    setProfileImage(res?.users[0].photoUrl)
+    }
+    
           }
           fetchProfile()
     },[])
