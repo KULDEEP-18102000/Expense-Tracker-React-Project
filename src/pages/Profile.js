@@ -1,5 +1,6 @@
 import { useRef,useEffect,useState } from "react"
 import axios from "axios"
+import { Link } from "react-router-dom/cjs/react-router-dom"
 
 const ProfilePage=()=>{
 
@@ -26,7 +27,9 @@ const ProfilePage=()=>{
     if(response.ok){
         const res=await response.json()
     console.log(res?.users[0])
-    setProfileName(res?.users[0].displayName)
+    // setProfileName(res?.users[0].displayName)
+    nameRef.current.value=res?.users[0].displayName
+    // photoRef.current.value=res?.users[0].photoUrl
     setProfileImage(res?.users[0].photoUrl)
     }
     
@@ -62,11 +65,12 @@ const ProfilePage=()=>{
         <form onSubmit={submitProfile}>
   <div class="mb-3">
     <label htmlFor="exampleInputName1" className="form-label">Full Name</label>
-    <input type="text" class="form-control" id="exampleInputName1" aria-describedby="emailHelp" ref={nameRef} value={profileName}/>
+    <input type="text" class="form-control" id="exampleInputName1" aria-describedby="emailHelp" ref={nameRef}/>
   </div>
   <div class="mb-3">
     <label htmlFor="exampleInputPhoto1" className="form-label">Photo URL</label>
     <input type="file" class="form-control" id="exampleInputPhoto1" ref={photoRef}/>
+    <Link to={'Screenshot (3).png'}>{profileImage}</Link>
   </div>
   
   <button type="submit" className="btn btn-primary">Submit</button>
