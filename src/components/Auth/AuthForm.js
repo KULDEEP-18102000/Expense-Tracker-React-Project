@@ -1,7 +1,7 @@
 import { useState, useRef,useContext } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import classes from './AuthForm.module.css';
-
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 
 const AuthForm = () => {
@@ -147,6 +147,10 @@ const history=useHistory()
         }
         
         <div className={classes.actions}>
+
+          {isLogin && <Link to='/reset-password'>Forgot Password</Link>}
+          
+
           <button type='button'className={classes.toggle} onClick={switchAuthModeHandler}>{isLogin?'Create New Account':'Login with existing account'}</button>
             
           {loading===true?<p style={{color:'white'}}>Sending Request...</p>:<button style={{margin:'2px'}}>{isLogin?'Login':'Sign Up'}</button>}

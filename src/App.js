@@ -4,6 +4,7 @@ import AuthForm from './components/Auth/AuthForm';
 import WelcomePage from './pages/Welcome';
 import ProfilePage from './pages/Profile';
 import NavBar from './components/NavBar';
+import ResetPassword from './pages/ResetPassword';
 import { Route,Redirect } from 'react-router-dom';
 // import { Fragment } from 'react';
 
@@ -29,6 +30,10 @@ function App() {
 
       <Route exact path='/profile'>
         <ProfilePage/>
+      </Route>
+
+      <Route exact path='/reset-password'>
+        <ResetPassword/>
       </Route>
       </>
   );
