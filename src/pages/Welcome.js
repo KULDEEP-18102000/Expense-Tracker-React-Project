@@ -1,8 +1,38 @@
 import { NavLink } from "react-router-dom/cjs/react-router-dom"
+import { useContext,useState } from "react"
+import expenseContext from "../store/expense-context"
+import ExpenseForm from "../components/ExpenseForm"
+import ExpenseList from "../components/ExpenseList"
 
 const WelcomePage=()=>{
 
+    const ctx=useContext(expenseContext)
+    console.log(ctx)
+
+    const [expense,setExpense]=useState({
+        amount:0,
+        description:"",
+        category:"Food"
+    })
+
     const idToken=localStorage.getItem('token')
+
+    const addExpense=(e)=>{
+        e.preventDefault()
+        console.log("expense",expense)
+        ctx.addExpense(expense)
+        setExpense({
+          amount:0,
+          description:"",
+          category:"Food"
+        })
+    }
+
+    const onChangeHandler=(e)=>{
+        // e.preventDefault()
+        console.log(e.target.value)
+        setExpense({...expense,[e.target.name]:e.target.value})
+    }
 
     const sendEmailForVerification=async()=>{
         const response= await fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBgisiq-vo6ATIrzPaLyCe3j876p8HEzVs',{
@@ -27,13 +57,19 @@ const WelcomePage=()=>{
     }
 
     return(
-        <div>
+        <div className="container">
             <h1>Welcome To Expense Tracker</h1>
             <h3>Your Profile is incomplete. <NavLink to="/profile">Complete Now</NavLink></h3>
             <div>
                 <h3>Verify Your Email Address</h3>
                 <button onClick={sendEmailForVerification}>Verify</button>
             </div>
+
+            <div className="container m-5">
+
+              <ExpenseForm/>
+              <ExpenseList/>
+              </div>
         </div>
     )
 }

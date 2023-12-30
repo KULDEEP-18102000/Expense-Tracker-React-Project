@@ -5,6 +5,7 @@ import WelcomePage from './pages/Welcome';
 import ProfilePage from './pages/Profile';
 import NavBar from './components/NavBar';
 import ResetPassword from './pages/ResetPassword';
+import HomePage from './pages/Home';
 import { Route,Redirect } from 'react-router-dom';
 // import { Fragment } from 'react';
 
@@ -34,6 +35,12 @@ function App() {
 
       <Route exact path='/reset-password'>
         <ResetPassword/>
+      </Route>
+
+      <Route exact path='/home'>
+        {token && <HomePage/>}
+        {token && <Redirect to='/auth'/>}
+        <HomePage/>
       </Route>
       </>
   );
