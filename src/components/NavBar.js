@@ -1,13 +1,16 @@
 import { useHistory } from "react-router-dom/cjs/react-router-dom"
 import { NavLink } from "react-router-dom/cjs/react-router-dom"
+import { useContext } from "react"
+import expenseContext from "../store/expense-context"
 
 const NavBar=()=>{
 
     const history=useHistory()
 
+    const ctx=useContext(expenseContext)
+
     const logOut=()=>{
-        localStorage.clear('token')
-        console.log('cleared')
+        ctx.logOutHandler()
         history.push('/auth')
     }
 

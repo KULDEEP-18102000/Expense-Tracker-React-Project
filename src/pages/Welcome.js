@@ -17,23 +17,6 @@ const WelcomePage=()=>{
 
     const idToken=localStorage.getItem('token')
 
-    const addExpense=(e)=>{
-        e.preventDefault()
-        console.log("expense",expense)
-        ctx.addExpense(expense)
-        setExpense({
-          amount:0,
-          description:"",
-          category:"Food"
-        })
-    }
-
-    const onChangeHandler=(e)=>{
-        // e.preventDefault()
-        console.log(e.target.value)
-        setExpense({...expense,[e.target.name]:e.target.value})
-    }
-
     const sendEmailForVerification=async()=>{
         const response= await fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBgisiq-vo6ATIrzPaLyCe3j876p8HEzVs',{
       method:'POST',

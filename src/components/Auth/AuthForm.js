@@ -2,11 +2,12 @@ import { useState, useRef,useContext } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import classes from './AuthForm.module.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import expenseContext from '../../store/expense-context';
 
 
 const AuthForm = () => {
 
-//   const ctx=useContext(CartContext)
+  const ctx=useContext(expenseContext)
 const history=useHistory()
 
   
@@ -99,7 +100,8 @@ const history=useHistory()
       setLoading(false)
 
       console.log(res.idToken)
-      localStorage.setItem('token',res.idToken)
+      ctx.loginHandler(res.idToken)
+      // localStorage.setItem('token',res.idToken)
       // ctx.loginHandler(res.idToken)
       history.push('/')
       console.log("successfully signed in")

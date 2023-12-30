@@ -7,11 +7,16 @@ import NavBar from './components/NavBar';
 import ResetPassword from './pages/ResetPassword';
 import HomePage from './pages/Home';
 import { Route,Redirect } from 'react-router-dom';
+import { useContext } from 'react';
+import expenseContext from './store/expense-context';
 // import { Fragment } from 'react';
 
 const token=localStorage.getItem('token')
 
 function App() {
+
+  const ctx=useContext(expenseContext)
+
   return (
     // <div>
     //   <AuthForm/>
@@ -24,8 +29,8 @@ function App() {
     </Route>
       
       <Route exact path='/'>
-        {token && <WelcomePage/>}
-        {!token && <Redirect to='/auth'/>}
+        {ctx.isLoggedIn && <WelcomePage/>}
+        {!ctx.isLoggedIn && <Redirect to='/auth'/>}
         {/* <WelcomePage/> */}
       </Route>
 
@@ -38,8 +43,8 @@ function App() {
       </Route>
 
       <Route exact path='/home'>
-        {token && <HomePage/>}
-        {token && <Redirect to='/auth'/>}
+        {ctx.isLoggedIn && <HomePage/>}
+        {!ctx.isLoggedIn && <Redirect to='/auth'/>}
         <HomePage/>
       </Route>
       </>
