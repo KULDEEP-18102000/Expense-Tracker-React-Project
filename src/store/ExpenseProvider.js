@@ -58,10 +58,37 @@ const ExpenseProvider=(props)=>{
        console.log(response)
         setExpenses([...expenses,expense])
     }
+
+    const DeleteExpense=async(deletedExpense)=>{
+        const response=await axios.delete(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses/${deletedExpense.id}.json`)
+       console.log(response)
+       const updatedExpenses=expenses.filter((expense)=>{
+        return expense.id!=deletedExpense.id
+       })
+       setExpenses(updatedExpenses)
+    }
+
+    const editExpense=async(editExpense)=>{
+        console.log(editExpense)
+        const response=await axios.put(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses/${editExpense.id}.json`,editExpense)
+       console.log(response)
+       const updatedExpenses=[]
+       for (let index = 0; index < expenses.length; index++) {
+        const element = expenses[index];
+        if(element.id==editExpense.id){
+            element.amount=editExpense.amount
+            element.description=editExpense.description
+            element.category=editExpense.category
+        }
+        updatedExpenses.push(element)
+       }
+       console.log(updatedExpenses)
+       setExpenses(updatedExpenses)
+    }
     
     return(
         <>
-        <expenseContext.Provider value={{expenses,addExpense,isLoggedIn,loginHandler,logOutHandler}}>
+        <expenseContext.Provider value={{expenses,addExpense,isLoggedIn,loginHandler,logOutHandler,DeleteExpense,editExpense}}>
             {props.children}
         </expenseContext.Provider>
         </>
