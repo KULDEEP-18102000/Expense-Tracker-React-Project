@@ -10,8 +10,18 @@ const cartSlice=createSlice({
     initialState:initialCartStore,
     reducers:{
         addToCart(state,action){
-            
-            state.items.push(action.payload)
+            let flag=false
+            for (let index = 0; index < state.items.length; index++) {
+                const element = state.items[index];
+                if(element.title==action.payload.title){
+                    element.quantity=element.quantity+1
+                    element.total=element.total+action.payload.price
+                    flag=true
+                }
+            }
+            if(flag==false){
+                state.items.push(action.payload)
+            }
         },
         increaseQuantity(state,action){
             state.items.forEach((item)=>{
@@ -24,7 +34,7 @@ const cartSlice=createSlice({
         decreaseQuantity(state,action){
             state.items.forEach((item)=>{
                 if(item.title==action.payload.title){
-                    if(item.quantity==0){
+                    if(item.quantity==1){
                         state.items=state.items.filter((element)=>{
                             return element.title!=item.title
                         })
