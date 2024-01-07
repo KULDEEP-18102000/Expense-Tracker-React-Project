@@ -10,12 +10,48 @@ import { Route,Redirect } from 'react-router-dom';
 import { useContext } from 'react';
 import expenseContext from './store/expense-context';
 // import { Fragment } from 'react';
+import { useDispatch,useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { ExpenseActions } from './store/Expense';
+import axios from 'axios';
 
 const token=localStorage.getItem('token')
 
 function App() {
 
   const ctx=useContext(expenseContext)
+
+  const isAuthenticated=useSelector(state=>state.auth.isAuthenticated)
+  console.log(isAuthenticated)
+
+  const dispatch=useDispatch()
+
+  useEffect(()=>{
+    const fetchExpenses=async()=>{
+        const response=await axios.get(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses.json`)
+   console.log(response.data)
+   const expensesArray=[]
+   let ID_Array
+   if(response.data){
+    ID_Array=Object.keys(response.data)
+   }
+   
+   ID_Array?.forEach((id)=>{
+    const obj={
+        id:id,
+        amount:response.data[id].amount,
+        description:response.data[id].description,
+        category:response.data[id].category
+    }
+    dispatch(ExpenseActions.addExpense(obj))
+    // expensesArray.push(obj)
+   })
+   console.log(expensesArray)
+  //  setExpenses(expensesArray)
+    }
+    fetchExpenses()
+
+},[])
 
   return (
     // <div>
@@ -29,8 +65,8 @@ function App() {
     </Route>
       
       <Route exact path='/'>
-        {ctx.isLoggedIn && <WelcomePage/>}
-        {!ctx.isLoggedIn && <Redirect to='/auth'/>}
+        {isAuthenticated && <WelcomePage/>}
+        {!isAuthenticated && <Redirect to='/auth'/>}
         {/* <WelcomePage/> */}
       </Route>
 
@@ -43,8 +79,8 @@ function App() {
       </Route>
 
       <Route exact path='/home'>
-        {ctx.isLoggedIn && <HomePage/>}
-        {!ctx.isLoggedIn && <Redirect to='/auth'/>}
+        {isAuthenticated && <HomePage/>}
+        {!isAuthenticated && <Redirect to='/auth'/>}
         <HomePage/>
       </Route>
       </>

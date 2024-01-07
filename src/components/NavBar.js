@@ -2,6 +2,9 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom"
 import { NavLink } from "react-router-dom/cjs/react-router-dom"
 import { useContext } from "react"
 import expenseContext from "../store/expense-context"
+import { useDispatch } from 'react-redux';
+import { authActions } from "../store/Auth";
+import { useSelector } from 'react-redux';
 
 const NavBar=()=>{
 
@@ -9,8 +12,14 @@ const NavBar=()=>{
 
     const ctx=useContext(expenseContext)
 
+    const isAuthenticated=useSelector(state=>state.auth.isAuthenticated)
+
+    const dispatch=useDispatch()
+
+
     const logOut=()=>{
-        ctx.logOutHandler()
+        // ctx.logOutHandler()
+        dispatch(authActions.logOut())
         history.push('/auth')
     }
 

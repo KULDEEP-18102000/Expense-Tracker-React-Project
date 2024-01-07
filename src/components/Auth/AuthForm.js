@@ -3,12 +3,17 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import classes from './AuthForm.module.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
 import expenseContext from '../../store/expense-context';
+import {useDispatch} from 'react-redux'
+import {useSelector} from 'react-redux'
+import { authActions } from '../../store/Auth';
 
 
 const AuthForm = () => {
 
   const ctx=useContext(expenseContext)
 const history=useHistory()
+
+const dispatch=useDispatch()
 
   
   const [user,setUser]=useState({
@@ -100,7 +105,9 @@ const history=useHistory()
       setLoading(false)
 
       console.log(res.idToken)
-      ctx.loginHandler(res.idToken)
+      dispatch(authActions.login({token:res.idToken,userId:user.password}))
+      authActions.login(res.idToken)
+      // ctx.loginHandler(res.idToken)
       // localStorage.setItem('token',res.idToken)
       // ctx.loginHandler(res.idToken)
       history.push('/')

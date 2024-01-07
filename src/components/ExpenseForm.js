@@ -1,10 +1,16 @@
 import { useState,useContext } from "react"
 import expenseContext from "../store/expense-context"
+import {useDispatch,useSelector} from 'react-redux'
+import { ExpenseActions } from "../store/Expense"
+import axios from "axios"
 
 const ExpenseForm=()=>{
 
     const ctx=useContext(expenseContext)
     console.log(ctx)
+
+    const dispatch=useDispatch()
+
 
     const [expense,setExpense]=useState({
         amount:0,
@@ -12,10 +18,13 @@ const ExpenseForm=()=>{
         category:"Food"
     })
 
-    const addExpense=(e)=>{
+    const addExpense=async(e)=>{
         e.preventDefault()
         console.log("expense",expense)
-        ctx.addExpense(expense)
+        // ctx.addExpense(expense)
+        const response=await axios.post(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses.json`,expense)
+       console.log(response)
+        dispatch(ExpenseActions.addExpense(expense))
         setExpense({
           amount:0,
           description:"",

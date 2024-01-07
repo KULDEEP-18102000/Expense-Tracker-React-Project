@@ -12,6 +12,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import {useDispatch,useSelector} from 'react-redux'
+import { ExpenseActions } from "../store/Expense";
+import axios from "axios";
 
 const style = {
     position: 'absolute',
@@ -34,6 +37,19 @@ const ExpenseList=()=>{
         category:"Food"
     })
 
+    const dispatch=useDispatch()
+
+    const expenses=useSelector(state=>state.expense.expenses)
+    console.log(expenses)
+
+    let totalExpenseAmount=0
+    for (let index = 0; index < expenses.length; index++) {
+      const element = expenses[index];
+      // console.log(element)
+      totalExpenseAmount=totalExpenseAmount+parseInt(element.amount)
+      // console.log(totalExpenseAmount)
+    }
+    console.log(totalExpenseAmount)
 
   const handleOpen = (expense) =>{
     setOpen(true);
@@ -43,8 +59,11 @@ const ExpenseList=()=>{
 
     const ctx=useContext(expenseContext)
 
-    const DeleteExpenseHandler=(expense)=>{
-        ctx.DeleteExpense(expense)
+    const DeleteExpenseHandler=async(expense)=>{
+        // ctx.DeleteExpense(expense)
+        const response=await axios.delete(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses/${expense.id}.json`)
+       console.log(response)
+        dispatch(ExpenseActions.deleteExpense(expense))
         console.log("Expense successfuly deleted")
     }
 
@@ -54,15 +73,24 @@ const ExpenseList=()=>{
         setEditExpense({...editExpense,[e.target.name]:e.target.value})
     }
 
-    const EditExpenseHandler=(e)=>{
+    const EditExpenseHandler=async(e)=>{
         e.preventDefault()
         console.log(editExpense)
-        ctx.editExpense(editExpense)
+        const response=await axios.put(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses/${editExpense.id}.json`,editExpense)
+       console.log(response)
+        dispatch(ExpenseActions.editExpense(editExpense))
+        // ctx.editExpense(editExpense)
         setOpen(false)
     }
 
+
+
     return(
         <div className="container m-5">
+
+
+{totalExpenseAmount>10000 && <button>Activate Premium</button>}
+          
   <h4>List Of Expenses</h4>
 <table class="table">
   <thead>
@@ -75,7 +103,7 @@ const ExpenseList=()=>{
     </tr>
   </thead>
   <tbody>
-  {ctx.expenses.map((expense)=>
+  {expenses.map((expense)=>
     // <li>{expense.amount}</li>
     <tr>
       <td>{expense.amount}</td>
