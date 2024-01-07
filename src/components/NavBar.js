@@ -5,6 +5,7 @@ import expenseContext from "../store/expense-context"
 import { useDispatch } from 'react-redux';
 import { authActions } from "../store/Auth";
 import { useSelector } from 'react-redux';
+import { ThemeActions } from "../store/Theme";
 
 const NavBar=()=>{
 
@@ -16,11 +17,24 @@ const NavBar=()=>{
 
     const dispatch=useDispatch()
 
+    const isDarkTheme=useSelector(state=>state.theme.isDarkTheme)
+    console.log(isDarkTheme)
+
+    const isThemeActivated=useSelector(state=>state.theme.isThemeActivated)
+
 
     const logOut=()=>{
         // ctx.logOutHandler()
         dispatch(authActions.logOut())
         history.push('/auth')
+    }
+
+    const themeHandler=()=>{
+      if(isDarkTheme==true){
+        dispatch(ThemeActions.setLightTheme())
+      }else{
+        dispatch(ThemeActions.setDarkTheme())
+      }
     }
 
     return(
@@ -50,6 +64,9 @@ const NavBar=()=>{
         
       </ul>
     </div>
+
+    {isThemeActivated && <button onClick={themeHandler}>{isDarkTheme?'set Light':'set Dark'}</button>}
+    
   </div>
 </nav>
         </>

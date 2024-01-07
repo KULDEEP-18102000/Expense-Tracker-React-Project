@@ -15,6 +15,8 @@ import Select from '@mui/material/Select';
 import {useDispatch,useSelector} from 'react-redux'
 import { ExpenseActions } from "../store/Expense";
 import axios from "axios";
+import { ThemeActions } from "../store/Theme";
+import Papa from 'papaparse';
 
 const style = {
     position: 'absolute',
@@ -42,14 +44,10 @@ const ExpenseList=()=>{
     const expenses=useSelector(state=>state.expense.expenses)
     console.log(expenses)
 
-    let totalExpenseAmount=0
-    for (let index = 0; index < expenses.length; index++) {
-      const element = expenses[index];
-      // console.log(element)
-      totalExpenseAmount=totalExpenseAmount+parseInt(element.amount)
-      // console.log(totalExpenseAmount)
-    }
-    console.log(totalExpenseAmount)
+    const totalExpenseAmount=useSelector(state=>state.expense.totalExpenseAmount)
+
+    const isThemeActivated=useSelector(state=>state.theme.isThemeActivated)
+    
 
   const handleOpen = (expense) =>{
     setOpen(true);
@@ -83,13 +81,54 @@ const ExpenseList=()=>{
         setOpen(false)
     }
 
+    const activatePremiumHandler=()=>{
+      dispatch(ThemeActions.setDarkTheme())
+      dispatch(ThemeActions.setThemeActivated())
+    }
+
+    // const data = [
+    //   ['Name', 'Age', 'Country'],
+    //   ['John Doe', 25, 'USA'],
+    //   ['Jane Smith', 30, 'Canada'],
+    //   // Add more data rows as needed
+    // ];
+
+    const data=[
+      ['Amount','Description','Category']
+    ]
+
+    expenses.forEach(element => {
+      const temp_arr=[]
+      temp_arr.push(element.amount)
+      temp_arr.push(element.description)
+      temp_arr.push(element.category)
+      data.push(temp_arr)
+    });
+    console.log(data)
+  
+    const downloadCSV = () => {
+      const csv = Papa.unparse(data);
+  
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+  
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'data.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    };
 
 
     return(
         <div className="container m-5">
 
 
-{totalExpenseAmount>10000 && <button>Activate Premium</button>}
+{totalExpenseAmount>10000 && <button onClick={activatePremiumHandler}>Activate Premium</button>}
           
   <h4>List Of Expenses</h4>
 <table class="table">
@@ -115,6 +154,8 @@ const ExpenseList=()=>{
 )}
   </tbody>
 </table>
+
+{isThemeActivated && <button onClick={downloadCSV}>Download</button>}
 
 <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Subscribe</DialogTitle>

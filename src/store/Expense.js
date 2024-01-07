@@ -1,21 +1,11 @@
-import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { useEffect } from "react";
 import axios from "axios";
 
-const fetchExpenses = createAsyncThunk("expense/fetchExpenses", async () => {
-    try {
-      const response = await axios.get("https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses.json");
-      console.log(response)
-      return response.data; // Assuming the API returns an array of expenses
-    } catch (error) {
-      throw error;
-    }
-  });
 
   const initialExpenseStore = {
     expenses: [],
-    status: "idle", // or "loading", "succeeded", "failed"
-    error: null,
+    totalExpenseAmount:0
   };
 
 const ExpenseSlice=createSlice({
@@ -27,6 +17,7 @@ const ExpenseSlice=createSlice({
     //    console.log(response)
         // setExpenses([...expenses,expense])
         state.expenses.push(action.payload)
+        state.totalExpenseAmount=state.totalExpenseAmount+parseInt(action.payload.amount)
         console.log(action)
         },
         deleteExpense(state,action){
@@ -37,6 +28,8 @@ const ExpenseSlice=createSlice({
        })
     //    setExpenses(updatedExpenses)
     state.expenses=updatedExpenses
+    state.totalExpenseAmount=state.totalExpenseAmount-parseInt(action.payload.amount)
+    console.log(state.totalExpenseAmount)
         },
         editExpense(state,action){
             // const response=await axios.put(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses/${editExpense.id}.json`,editExpense)
@@ -45,7 +38,9 @@ const ExpenseSlice=createSlice({
        for (let index = 0; index <state.expenses.length; index++) {
         const element = state.expenses[index];
         if(element.id==action.payload.id){
+          state.totalExpenseAmount=state.totalExpenseAmount-parseInt(element.amount)
             element.amount=action.payload.amount
+            state.totalExpenseAmount=state.totalExpenseAmount+parseInt(element.amount)
             element.description=action.payload.description
             element.category=action.payload.category
         }
@@ -55,21 +50,7 @@ const ExpenseSlice=createSlice({
     //    setExpenses(updatedExpenses)
     state.expenses=updatedExpenses
         }
-    },
-    extraReducers: (builder) => {
-        builder
-          .addCase(fetchExpenses.pending, (state) => {
-            state.status = "loading";
-          })
-          .addCase(fetchExpenses.fulfilled, (state, action) => {
-            state.status = "succeeded";
-            state.expenses = action.payload;
-          })
-          .addCase(fetchExpenses.rejected, (state, action) => {
-            state.status = "failed";
-            state.error = action.error.message;
-          });
-      },
+    }
 })
 
 export const ExpenseReducer=ExpenseSlice.reducer

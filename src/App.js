@@ -11,9 +11,11 @@ import { useContext } from 'react';
 import expenseContext from './store/expense-context';
 // import { Fragment } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { ExpenseActions } from './store/Expense';
 import axios from 'axios';
+import './style.css'
+import { ThemeActions } from './store/Theme';
 
 const token=localStorage.getItem('token')
 
@@ -24,7 +26,25 @@ function App() {
   const isAuthenticated=useSelector(state=>state.auth.isAuthenticated)
   console.log(isAuthenticated)
 
+  const totalExpenseAmount=useSelector(state=>state.expense.totalExpenseAmount)
+
+  const isDarkTheme=useSelector(state=>state.theme.isDarkTheme)
+
+  
+
   const dispatch=useDispatch()
+
+  // console.log(totalExpenseAmount)
+  //   if(totalExpenseAmount>10000){
+  //     dispatch(ThemeActions.setThemeActivated())
+  //   }else{
+  //     dispatch(ThemeActions.setThemeDeactivated())
+  //   }
+  //   console.log()
+  if(totalExpenseAmount<10000){
+    dispatch(ThemeActions.setLightTheme())
+    dispatch(ThemeActions.setThemeDeactivated())
+  }
 
   useEffect(()=>{
     const fetchExpenses=async()=>{
@@ -50,14 +70,17 @@ function App() {
   //  setExpenses(expensesArray)
     }
     fetchExpenses()
-
+    
 },[])
 
   return (
     // <div>
     //   <AuthForm/>
     // </div>
-    <>
+    <div style={{
+          backgroundColor: isDarkTheme ? '#121212' : '#ffffff',
+          color: isDarkTheme ? '#ffffff' : '#333333'
+        }}>
     <NavBar></NavBar>
     
     <Route exact path="/auth">
@@ -83,7 +106,7 @@ function App() {
         {!isAuthenticated && <Redirect to='/auth'/>}
         <HomePage/>
       </Route>
-      </>
+      </div>
   );
 }
 
