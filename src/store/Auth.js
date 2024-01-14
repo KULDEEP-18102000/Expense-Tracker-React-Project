@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialAuthStore={
     isAuthenticated:!!localStorage.getItem('token'),
     token:null,
-    userId:null
+    email:localStorage.getItem('email')?.split('@')[0]
 }
 
 const authSlice=createSlice({
@@ -13,6 +13,9 @@ const authSlice=createSlice({
         login(state,action){
             console.log(state)
             localStorage.setItem('token',action.payload.token)
+            localStorage.setItem('email',action.payload.email)
+            state.email=action.payload.email.split('@')[0]
+            console.log(state.email)
         setTimeout(()=>{
             console.log("settomeoutcalled")
             localStorage.clear('token')
@@ -24,9 +27,10 @@ const authSlice=createSlice({
         },
         logOut(state){
             localStorage.clear('token')
+            localStorage.clear('email')
             state.token=null
             state.isAuthenticated=false
-            state.userId=null
+            state.email=null
         }
     }
 })

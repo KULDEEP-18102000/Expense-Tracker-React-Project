@@ -11,6 +11,8 @@ const ExpenseForm=()=>{
 
     const dispatch=useDispatch()
 
+    const email=useSelector(state=>state.auth.email)
+    console.log(email)
 
     const [expense,setExpense]=useState({
         amount:0,
@@ -22,7 +24,8 @@ const ExpenseForm=()=>{
         e.preventDefault()
         console.log("expense",expense)
         // ctx.addExpense(expense)
-        const response=await axios.post(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses.json`,expense)
+        // const email=localStorage.getItem('email').split('@')[0]
+        const response=await axios.post(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses-${email}.json`,expense)
        console.log(response)
         dispatch(ExpenseActions.addExpense(expense))
         setExpense({

@@ -49,6 +49,11 @@ const ExpenseSlice=createSlice({
        console.log(updatedExpenses)
     //    setExpenses(updatedExpenses)
     state.expenses=updatedExpenses
+        },
+        resetExpense(state,action){
+          state.expenses=[]
+          state.totalExpenseAmount=0
+          console.log(state)
         }
     }
 })

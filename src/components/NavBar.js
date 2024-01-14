@@ -4,6 +4,7 @@ import { useContext } from "react"
 import expenseContext from "../store/expense-context"
 import { useDispatch } from 'react-redux';
 import { authActions } from "../store/Auth";
+import { ExpenseActions } from "../store/Expense";
 import { useSelector } from 'react-redux';
 import { ThemeActions } from "../store/Theme";
 
@@ -26,6 +27,7 @@ const NavBar=()=>{
     const logOut=()=>{
         // ctx.logOutHandler()
         dispatch(authActions.logOut())
+        dispatch(ExpenseActions.resetExpense())
         history.push('/auth')
     }
 

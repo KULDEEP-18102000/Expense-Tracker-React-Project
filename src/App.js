@@ -30,7 +30,8 @@ function App() {
 
   const isDarkTheme=useSelector(state=>state.theme.isDarkTheme)
 
-  
+  const email=useSelector(state=>state.auth.email)
+  console.log(email)
 
   const dispatch=useDispatch()
 
@@ -48,14 +49,22 @@ function App() {
 
   useEffect(()=>{
     const fetchExpenses=async()=>{
-        const response=await axios.get(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses.json`)
+      // const email=localStorage.getItem('email')?.split('@')[0]
+      // console.log(email)
+    
+      let response
+      if(email!=undefined && email!=null){
+        response=await axios.get(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses-${email}.json`)
    console.log(response.data)
+      }
+        
    const expensesArray=[]
    let ID_Array
-   if(response.data){
+   if(response?.data){
     ID_Array=Object.keys(response.data)
    }
    
+  //  dispatch(ExpenseActions.resetExpense())
    ID_Array?.forEach((id)=>{
     const obj={
         id:id,
@@ -71,7 +80,7 @@ function App() {
     }
     fetchExpenses()
     
-},[])
+},[email])
 
   return (
     // <div>

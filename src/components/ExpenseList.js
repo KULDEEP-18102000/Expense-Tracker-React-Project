@@ -44,6 +44,9 @@ const ExpenseList=()=>{
     const expenses=useSelector(state=>state.expense.expenses)
     console.log(expenses)
 
+    const email=useSelector(state=>state.auth.email)
+    console.log(email)
+
     const totalExpenseAmount=useSelector(state=>state.expense.totalExpenseAmount)
 
     const isThemeActivated=useSelector(state=>state.theme.isThemeActivated)
@@ -59,7 +62,8 @@ const ExpenseList=()=>{
 
     const DeleteExpenseHandler=async(expense)=>{
         // ctx.DeleteExpense(expense)
-        const response=await axios.delete(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses/${expense.id}.json`)
+        // const email=localStorage.getItem('email').split('@')[0]
+        const response=await axios.delete(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses-${email}/${expense.id}.json`)
        console.log(response)
         dispatch(ExpenseActions.deleteExpense(expense))
         console.log("Expense successfuly deleted")
@@ -74,7 +78,8 @@ const ExpenseList=()=>{
     const EditExpenseHandler=async(e)=>{
         e.preventDefault()
         console.log(editExpense)
-        const response=await axios.put(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses/${editExpense.id}.json`,editExpense)
+        // const email=localStorage.getItem('email').split('@')[0]
+        const response=await axios.put(`https://expense-tracker-fdf40-default-rtdb.firebaseio.com/expenses-${email}/${editExpense.id}.json`,editExpense)
        console.log(response)
         dispatch(ExpenseActions.editExpense(editExpense))
         // ctx.editExpense(editExpense)
