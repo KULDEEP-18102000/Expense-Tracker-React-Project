@@ -11,11 +11,11 @@ const authSlice=createSlice({
     initialState:initialAuthStore,
     reducers:{
         login(state,action){
-            console.log(state)
+            // console.log(state)
             localStorage.setItem('token',action.payload.token)
             localStorage.setItem('email',action.payload.email)
             state.email=action.payload.email.split('@')[0]
-            console.log(state.email)
+            // console.log(state.email)
         setTimeout(()=>{
             console.log("settomeoutcalled")
             localStorage.clear('token')

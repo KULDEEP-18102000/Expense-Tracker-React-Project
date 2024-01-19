@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useEffect } from "react";
-import axios from "axios";
+// import { useEffect } from "react";
+// import axios from "axios";
 
 
   const initialExpenseStore = {
