@@ -1,5 +1,6 @@
 import { useRef,useState } from "react"
 
+
 const ResetPassword=()=>{
 
     const emailRef=useRef()
@@ -26,6 +27,10 @@ const ResetPassword=()=>{
        console.log(response)
     }
 
+    const load=()=>{
+      setLoading(true)
+    }
+
     return(
         <div className="container m-5">
         <form onSubmit={ResetPassword}>
@@ -34,7 +39,11 @@ const ResetPassword=()=>{
     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ref={emailRef}/>
   </div>
 
+<button onClick={load}>Load</button>
+  {/* {loading==true && <p>Sending</p>} */}
+
   {loading==true ? <p>...Sending Request</p>: <button type="submit" class="btn btn-primary">Reset</button>}
+  {/* {loading==true ? <p>...Sending</p>: <p class="btn btn-primary">Reset</p>} */}
   
 </form>
 </div>
